@@ -352,6 +352,22 @@ h1 { display: flex; align-items: center; gap: 8px; white-space: nowrap; }
 .hello-ic[data-p="0"] { --pc: #5B52C8; } .hello-ic[data-p="1"] { --pc: #C98A00; } .hello-ic[data-p="2"] { --pc: #D9651B; } .hello-ic[data-p="3"] { --pc: #8A4FD0; }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .hello-ic[data-p="0"] { --pc: #8C94F5; } :root:not([data-theme="light"]) .hello-ic[data-p="1"] { --pc: #F0BC3A; } :root:not([data-theme="light"]) .hello-ic[data-p="2"] { --pc: #F29A58; } :root:not([data-theme="light"]) .hello-ic[data-p="3"] { --pc: #B896F0; } }
 :root[data-theme="dark"] .hello-ic[data-p="0"] { --pc: #8C94F5; } :root[data-theme="dark"] .hello-ic[data-p="1"] { --pc: #F0BC3A; } :root[data-theme="dark"] .hello-ic[data-p="2"] { --pc: #F29A58; } :root[data-theme="dark"] .hello-ic[data-p="3"] { --pc: #B896F0; }
+
+/* Jeito de app: sem destaque azul de site, sem seleção de texto nos botões, sem puxar-para-atualizar, e reação ao toque */
+html, body { -webkit-tap-highlight-color: transparent; overscroll-behavior: none; }
+body { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
+input, textarea, select { -webkit-user-select: text; user-select: text; }
+.ntext { -webkit-user-select: text; user-select: text; }
+.panel, .hist-view, .sheet-panel { overscroll-behavior-y: contain; }
+button, .row, .nrow { transition: transform 0.16s cubic-bezier(0.3, 1.5, 0.5, 1), filter 0.12s, background-color 0.15s; }
+button:active:not(:disabled) { transform: scale(0.95); filter: brightness(0.94); }
+.row:active, .nrow:active { transform: scale(0.985); }
+.row:active .txt-btn, .nrow:active .nbody, .habit-top .habit-name:active, .txt-btn:active, .nbody:active, .habit-name:active { transform: none; filter: none; }
+.btn:active { transform: scale(0.96); filter: brightness(0.9); }
+.tab:active { transform: scale(0.9); filter: none; }
+.dot:active:not(:disabled), .check:active { transform: scale(0.86); }
+.cal-day:active { transform: scale(0.9); }
+.face-btn:active { transform: scale(0.92); }
 </style>
 <style>
 .backup { margin: 20px 0 0; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
@@ -1334,6 +1350,8 @@ h1 { display: flex; align-items: center; gap: 8px; white-space: nowrap; }
   });
 
   document.addEventListener('visibilitychange', function () { if (!document.hidden) render(); });
+  document.addEventListener('contextmenu', function (e) { if (!e.target.closest('input, textarea')) e.preventDefault(); });
+
 
   /* ---------- Calendário ---------- */
   function renderCal() {
@@ -1599,14 +1617,4 @@ h1 { display: flex; align-items: center; gap: 8px; white-space: nowrap; }
       if (!d || typeof d !== 'object' || !Array.isArray(d.tasks) || !Array.isArray(d.habits)) { alert('Este arquivo não parece um backup do Painel da Vida.'); return; }
       if (!confirm('Substituir os dados atuais por este backup?')) return;
       d.sample = false;
-      try { localStorage.setItem(KEY, JSON.stringify(d)); } catch (err) { alert('Não foi possível importar.'); return; }
-      location.reload();
-    };
-    r.readAsText(f);
-    e.target.value = '';
-  });
-  if ('serviceWorker' in navigator) window.addEventListener('load', function () { navigator.serviceWorker.register('sw.js').catch(function () {}); });
-})();
-</script>
-</body>
-</html>
+      tr
